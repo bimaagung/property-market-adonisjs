@@ -1,6 +1,7 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Database from '@ioc:Adonis/Lucid/Database'
 import Property from 'App/Models/Property'
 import { DateTime } from 'luxon'
 
@@ -36,14 +37,15 @@ export default class PropertiesController {
     }
   }
 
-  public async list({ response }: HttpContextContract) {
-    const listProperty = await Property.all()
+  public async list({ request, response }: HttpContextContract) {
+    const { page, limit } = request.qs()
+    const listProperty = await Database.from('properties').paginate(page, limit)
 
     response.status(200)
     return {
       status: 'ok',
       message: 'success',
-      data: listProperty,
+      properties: listProperty,
     }
   }
 
