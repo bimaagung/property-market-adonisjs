@@ -28,4 +28,5 @@ Route.group(() => {
   Route.put('/property/:id', 'PropertiesController.update')
 
   Route.post('/auth/register', 'AuthController.register')
+  Route.post('/auth/login', 'AuthController.login')
 }).prefix('/api')
