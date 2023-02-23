@@ -26,7 +26,11 @@ Route.group(() => {
   Route.get('/property/:id', 'PropertiesController.findById')
   Route.delete('/property/:id', 'PropertiesController.delete')
   Route.put('/property/:id', 'PropertiesController.update')
+})
+  .prefix('/api')
+  .middleware('auth')
 
+Route.group(() => {
   Route.post('/auth/register', 'AuthController.register')
   Route.post('/auth/login', 'AuthController.login')
 }).prefix('/api')
