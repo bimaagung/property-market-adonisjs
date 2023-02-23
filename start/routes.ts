@@ -26,4 +26,6 @@ Route.group(() => {
   Route.get('/property/:id', 'PropertiesController.findById')
   Route.delete('/property/:id', 'PropertiesController.delete')
   Route.put('/property/:id', 'PropertiesController.update')
+
+  Route.post('/auth/register', 'AuthController.register')
 }).prefix('/api')
