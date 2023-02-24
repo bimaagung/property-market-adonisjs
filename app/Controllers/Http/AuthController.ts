@@ -4,6 +4,7 @@ import User from 'App/Models/User'
 export default class AuthController {
   public async register({ auth, request, response }: HttpContextContract) {
     const payload = request.body()
+    console.log('data', payload)
     let token: any
 
     const existNumber = await User.findBy('email', payload.email)

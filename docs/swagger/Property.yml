@@ -1,0 +1,125 @@
+/api/property/add:
+  post:
+    tags:
+      - Property
+    security: 
+      - bearerAuth: []
+    description: Add Property
+    requestBody:
+        description: Property Payload
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                number:
+                    type: string
+                    required: true
+                type:
+                    type: string
+                    required: true
+                address:
+                    type: string
+                    required: true
+    produces:
+      - application/json
+    responses:
+      201:
+        description: Success
+
+/api/property/list:
+  get:
+    tags:
+      - Property
+    security:
+      - bearerAuth: []
+    description: List Property
+    parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+        required: true
+      - in: query
+        name: limit 
+        schema:
+          type: integer
+        required: true
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Success
+
+/api/property/{PropertyId}:
+  get:
+    tags:
+      - Property
+    security:
+      - bearerAuth: []
+    description: Find By Id Property
+    parameters:
+      - in: path
+        name: PropertyId 
+        schema:
+          type: integer
+        required: true
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Success
+
+/api/property/update/{PropertyId}:
+  put:
+    tags:
+      - Property
+    security:
+      - bearerAuth: []
+    description: Update Property
+    parameters:
+      - in: path
+        name: PropertyId 
+        schema:
+          type: integer
+        required: true
+    requestBody:
+        description: Property Payload
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                number:
+                    type: string
+                    required: true
+                type:
+                    type: string
+                    required: true
+                address:
+                    type: string
+                    required: true
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Success
+
+/api/property/delete/{PropertyId}:
+  delete:
+    tags:
+      - Property
+    security:
+      - bearerAuth: []
+    description: Delete Property
+    parameters:
+      - in: path
+        name: PropertyId 
+        schema:
+          type: integer
+        required: true
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Success

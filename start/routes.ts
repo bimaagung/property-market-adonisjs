@@ -21,11 +21,11 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(() => {
-  Route.post('/property', 'PropertiesController.store')
-  Route.get('/property', 'PropertiesController.list')
+  Route.post('/property/add', 'PropertiesController.store')
+  Route.get('/property/list', 'PropertiesController.list')
   Route.get('/property/:id', 'PropertiesController.findById')
-  Route.delete('/property/:id', 'PropertiesController.delete')
-  Route.put('/property/:id', 'PropertiesController.update')
+  Route.delete('/property/delete/:id', 'PropertiesController.delete')
+  Route.put('/property/update/:id', 'PropertiesController.update')
 })
   .prefix('/api')
   .middleware('auth')
@@ -34,3 +34,8 @@ Route.group(() => {
   Route.post('/auth/register', 'AuthController.register')
   Route.post('/auth/login', 'AuthController.login')
 }).prefix('/api')
+
+Route.get('/docs', async ({ view }) => {
+  const specUrl = 'your spec url'
+  return view.render('swagger', { specUrl })
+})

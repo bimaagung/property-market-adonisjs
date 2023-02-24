@@ -1,0 +1,34 @@
+/api/register:
+post:
+    tags:
+      - Auth
+    requestBody:
+      required: true
+      content:
+        application/json:
+          description: Register payload
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: 'Bima Agung'
+                required: true
+              email:
+                type: string
+                example: 'bimaagung@example.com'
+                required: true
+              password:
+                type: string
+                example: '*************'
+                required: true
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+

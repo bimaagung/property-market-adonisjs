@@ -1,0 +1,78 @@
+/api/auth/register:
+  post:
+    tags:
+      - Auth
+    description: Register
+    requestBody:
+        description: User Payload
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                    type: string
+                    required: true
+                email:
+                    type: string
+                    required: true
+                password:
+                    type: string
+                    required: true
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+
+/api/auth/login:
+  post:
+    tags:
+      - Auth
+    description: Login
+    requestBody:
+        description: User Payload
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                    type: string
+                    required: true
+                password:
+                    type: string
+                    required: true
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Success
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        status:
+          type: string
+          example: 'ok'
+        message:
+          type: string
+          example: 'success'
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: 'User A'
+            email:
+              type: user
+              example: 'user@example.com'
