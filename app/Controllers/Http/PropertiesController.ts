@@ -101,4 +101,27 @@ export default class PropertiesController {
       data: result,
     }
   }
+
+  public async delete({ request, response }: HttpContextContract) {
+    const id = request.param('id')
+    const property = await Property.find(id)
+
+    if (property === null) {
+      response.status(404)
+
+      return {
+        status: 'fail',
+        message: 'property not found',
+      }
+    }
+
+    await property.delete()
+
+    response.status(200)
+    return {
+      status: 'ok',
+      message: 'success',
+      data: property,
+    }
+  }
 }
