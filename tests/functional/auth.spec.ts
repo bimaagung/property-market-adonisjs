@@ -8,14 +8,17 @@ test.group('Register', async (group) => {
   })
 
   test('should return correct', async ({ client, assert }) => {
+    // Arrange
     const payload = {
       name: 'test',
       email: 'test@example.com',
       password: 'secret',
     }
 
+    // Action
     const response = await client.post('/api/auth/register').json(payload)
 
+    // Assert
     response.assertStatus(201)
     assert.equal(response.body().message, 'success')
     assert.exists(response.body().data)
@@ -24,6 +27,7 @@ test.group('Register', async (group) => {
   })
 
   test('should return status 400 if user not available', async ({ client, assert }) => {
+    // Arrange
     const payload = {
       name: 'test',
       email: 'test@example.com',
@@ -31,8 +35,11 @@ test.group('Register', async (group) => {
     }
 
     await client.post('/api/auth/register').json(payload)
+
+    // Action
     const response = await client.post('/api/auth/register').json(payload)
 
+    // Assert
     response.assertStatus(400)
     assert.equal(response.body().status, 'fail')
     assert.equal(response.body().message, 'username or password not available')
@@ -46,6 +53,7 @@ test.group('Login', async (group) => {
   })
 
   test('should return correct', async ({ client, assert }) => {
+    // Arrange
     const payload = {
       name: 'test',
       email: 'test@example.com',
@@ -53,10 +61,13 @@ test.group('Login', async (group) => {
     }
 
     await client.post('/api/auth/register').json(payload)
+
+    // Action
     const response = await client
       .post('/api/auth/login')
       .json({ email: payload.email, password: payload.password })
 
+    // Assert
     response.assertStatus(200)
     assert.equal(response.body().status, 'ok')
     assert.equal(response.body().message, 'success')
@@ -69,16 +80,19 @@ test.group('Login', async (group) => {
     client,
     assert,
   }) => {
+    // Arrange
     const payload = {
       name: 'test',
       email: 'test@example.com',
       password: 'secret',
     }
 
+    // Action
     const response = await client
       .post('/api/auth/login')
       .json({ email: payload.email, password: payload.password })
 
+    // Assert
     response.assertStatus(400)
     assert.equal(response.body().status, 'fail')
     assert.equal(response.body().message, 'username or password incorrect')

@@ -8,6 +8,7 @@ test.group('Add Property', async (group) => {
   })
 
   test('should return correct', async ({ client, assert }) => {
+    // Arrange
     const payload = {
       number: 'A01',
       type: '50',
@@ -22,13 +23,13 @@ test.group('Add Property', async (group) => {
 
     const user = await client.post('/api/auth/register').json(payloadUser)
 
+    // Action
     const response = await client
       .post('/api/property/add')
-      .headers({
-        Authorization: 'Bearer ' + user.body().data.token.token,
-      })
+      .bearerToken(user.body().data.token.token)
       .json(payload)
 
+    // Assert
     response.assertStatus(201)
     assert.equal(response.body().message, 'success')
     assert.exists(response.body().data)
@@ -39,6 +40,7 @@ test.group('Add Property', async (group) => {
   })
 
   test('should return incorrect if property is existing', async ({ client, assert }) => {
+    // Arrange
     const payload = {
       number: 'A01',
       type: '50',
@@ -53,20 +55,15 @@ test.group('Add Property', async (group) => {
 
     const user = await client.post('/api/auth/register').json(payloadUser)
 
-    await client
-      .post('/api/property/add')
-      .headers({
-        Authorization: 'Bearer ' + user.body().data.token.token,
-      })
-      .json(payload)
+    await client.post('/api/property/add').bearerToken(user.body().data.token.token).json(payload)
 
+    // Action
     const response = await client
       .post('/api/property/add')
-      .headers({
-        Authorization: 'Bearer ' + user.body().data.token.token,
-      })
+      .bearerToken(user.body().data.token.token)
       .json(payload)
 
+    // Assert
     response.assertStatus(400)
     assert.equal(response.body().status, 'fail')
     assert.equal(response.body().message, 'property already exists')
@@ -103,24 +100,18 @@ test.group('List Property', async (group) => {
 
     await client
       .post('/api/property/add')
-      .headers({
-        Authorization: 'Bearer ' + user.body().data.token.token,
-      })
+      .bearerToken(user.body().data.token.token)
       .json(payloadPropertyA)
 
     await client
       .post('/api/property/add')
-      .headers({
-        Authorization: 'Bearer ' + user.body().data.token.token,
-      })
+      .bearerToken(user.body().data.token.token)
       .json(payloadPropertyB)
 
     // Action
     const response = await client
       .get('/api/property/list')
-      .headers({
-        Authorization: 'Bearer ' + user.body().data.token.token,
-      })
+      .bearerToken(user.body().data.token.token)
       .qs({
         page: 1,
         limit: 10,
@@ -164,9 +155,7 @@ test.group('FindById Property', async (group) => {
 
     const property = await client
       .post('/api/property/add')
-      .headers({
-        Authorization: 'Bearer ' + user.body().data.token.token,
-      })
+      .bearerToken(user.body().data.token.token)
       .json(payload)
 
     const idProperty = property.body().data.id
@@ -235,9 +224,7 @@ test.group('Delete Property', async (group) => {
 
     const property = await client
       .post('/api/property/add')
-      .headers({
-        Authorization: 'Bearer ' + user.body().data.token.token,
-      })
+      .bearerToken(user.body().data.token.token)
       .json(payload)
 
     const idProperty = property.body().data.id
@@ -312,18 +299,14 @@ test.group('Update Property', async (group) => {
 
     const property = await client
       .post('/api/property/add')
-      .headers({
-        Authorization: 'Bearer ' + user.body().data.token.token,
-      })
+      .bearerToken(user.body().data.token.token)
       .json(payloadA)
     const idProperty = property.body().data.id
 
     // Action
     const response = await client
       .put(`/api/property/update/${idProperty}`)
-      .headers({
-        Authorization: 'Bearer ' + user.body().data.token.token,
-      })
+      .bearerToken(user.body().data.token.token)
       .json(payloadB)
 
     // Assert
@@ -362,9 +345,7 @@ test.group('Update Property', async (group) => {
     // Action
     const response = await client
       .put(`/api/property/update/${idProperty}`)
-      .headers({
-        Authorization: 'Bearer ' + user.body().data.token.token,
-      })
+      .bearerToken(user.body().data.token.token)
       .json(payload)
 
     // Assert
