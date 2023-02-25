@@ -1,6 +1,5 @@
 import { test } from '@japa/runner'
 import Database from '@ioc:Adonis/Lucid/Database'
-import User from 'App/Models/User'
 
 test.group('Add Property', async (group) => {
   group.each.setup(async () => {
@@ -15,17 +14,20 @@ test.group('Add Property', async (group) => {
       address: 'jl. unkown',
     }
 
-    await User.create({
-      id: 1,
+    const payloadUser = {
       name: 'test',
       email: 'test@example.com',
       password: 'secret',
-      rememberMeToken: null,
-    })
+    }
 
-    const User = await User.find(1)
+    const user = await client.post('/api/auth/register').json(payloadUser)
 
-    const response = await client.post('/api/property/add').json(payload).guard('api').loginAs(User)
+    const response = await client
+      .post('/api/property/add')
+      .headers({
+        Authorization: 'Bearer ' + user.body().data.token.token,
+      })
+      .json(payload)
 
     response.assertStatus(201)
     assert.equal(response.body().message, 'success')
@@ -34,5 +36,39 @@ test.group('Add Property', async (group) => {
     assert.equal(response.body().data.number, payload.number)
     assert.equal(response.body().data.type, payload.type)
     assert.equal(response.body().data.address, payload.address)
+  })
+
+  test('should return incorrect if property is existing', async ({ client, assert }) => {
+    const payload = {
+      number: 'A01',
+      type: '50',
+      address: 'jl. unkown',
+    }
+
+    const payloadUser = {
+      name: 'test',
+      email: 'test@example.com',
+      password: 'secret',
+    }
+
+    const user = await client.post('/api/auth/register').json(payloadUser)
+
+    await client
+      .post('/api/property/add')
+      .headers({
+        Authorization: 'Bearer ' + user.body().data.token.token,
+      })
+      .json(payload)
+
+    const response = await client
+      .post('/api/property/add')
+      .headers({
+        Authorization: 'Bearer ' + user.body().data.token.token,
+      })
+      .json(payload)
+
+    response.assertStatus(400)
+    assert.equal(response.body().status, 'fail')
+    assert.equal(response.body().message, 'property already exists')
   })
 })
