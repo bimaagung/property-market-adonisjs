@@ -4,8 +4,6 @@ import User from 'App/Models/User'
 export default class AuthController {
   public async register({ auth, request, response }: HttpContextContract) {
     const payload = request.body()
-    console.log('data', payload)
-    let token: any
 
     const existNumber = await User.findBy('email', payload.email)
 
@@ -20,19 +18,9 @@ export default class AuthController {
 
     const user = await User.create(payload)
 
-    try {
-      token = await auth.use('api').generate(user, {
-        expiresIn: '30 mins',
-      })
-    } catch (error) {
-      console.error(error)
-      response.status(401)
-
-      return {
-        status: 'fail',
-        message: 'invalid credentials',
-      }
-    }
+    const token = await auth.use('api').generate(user, {
+      expiresIn: '30 mins',
+    })
 
     response.status(201)
 
@@ -51,7 +39,6 @@ export default class AuthController {
 
   public async login({ auth, request, response }: HttpContextContract) {
     const payload = request.body()
-    let token: any
 
     const user = await User.findBy('email', payload.email)
 
@@ -64,19 +51,9 @@ export default class AuthController {
       }
     }
 
-    try {
-      token = await auth.use('api').generate(user, {
-        expiresIn: '30 mins',
-      })
-    } catch (error) {
-      console.error(error)
-      response.status(401)
-
-      return {
-        status: 'fail',
-        message: 'invalid credentials',
-      }
-    }
+    const token = await auth.use('api').generate(user, {
+      expiresIn: '30 mins',
+    })
 
     response.status(200)
 

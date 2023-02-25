@@ -281,3 +281,95 @@ test.group('Delete Property', async (group) => {
     assert.equal(response.body().message, 'property not found')
   })
 })
+
+test.group('Update Property', async (group) => {
+  group.each.setup(async () => {
+    await Database.beginGlobalTransaction()
+    return () => Database.rollbackGlobalTransaction()
+  })
+
+  test('should return correct', async ({ client, assert }) => {
+    // Arrange
+    const payloadA = {
+      number: 'A01',
+      type: '50',
+      address: 'jl. unkown',
+    }
+
+    const payloadB = {
+      number: 'A02',
+      type: '62',
+      address: 'jl. defined',
+    }
+
+    const payloadUser = {
+      name: 'test',
+      email: 'test@example.com',
+      password: 'secret',
+    }
+
+    const user = await client.post('/api/auth/register').json(payloadUser)
+
+    const property = await client
+      .post('/api/property/add')
+      .headers({
+        Authorization: 'Bearer ' + user.body().data.token.token,
+      })
+      .json(payloadA)
+    const idProperty = property.body().data.id
+
+    // Action
+    const response = await client
+      .put(`/api/property/update/${idProperty}`)
+      .headers({
+        Authorization: 'Bearer ' + user.body().data.token.token,
+      })
+      .json(payloadB)
+
+    // Assert
+    const propertyUpdated = await client
+      .get(`/api/property/${idProperty}`)
+      .bearerToken(user.body().data.token.token)
+
+    response.assertStatus(200)
+    assert.equal(response.body().status, 'ok')
+    assert.equal(response.body().message, 'success')
+    assert.exists(propertyUpdated.body().data)
+    assert.exists(propertyUpdated.body().data.id)
+    assert.equal(propertyUpdated.body().data.number, payloadB.number)
+    assert.equal(propertyUpdated.body().data.type, payloadB.type)
+    assert.equal(propertyUpdated.body().data.address, payloadB.address)
+  })
+
+  test('should return incorrect if property is existing', async ({ client, assert }) => {
+    // Arrange
+    const payload = {
+      number: 'A01',
+      type: '50',
+      address: 'jl. unkown',
+    }
+
+    const payloadUser = {
+      name: 'test',
+      email: 'test@example.com',
+      password: 'secret',
+    }
+
+    const user = await client.post('/api/auth/register').json(payloadUser)
+
+    const idProperty = 1
+
+    // Action
+    const response = await client
+      .put(`/api/property/update/${idProperty}`)
+      .headers({
+        Authorization: 'Bearer ' + user.body().data.token.token,
+      })
+      .json(payload)
+
+    // Assert
+    response.assertStatus(404)
+    assert.equal(response.body().status, 'fail')
+    assert.equal(response.body().message, 'property not found')
+  })
+})
