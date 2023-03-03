@@ -50,17 +50,17 @@ localhost:9229/docs
 ## 📁 Project Structure
 
 ```
-   ├───app
-   ├───Controllers
-   │   └───Http
-   ├───Exceptions
-   ├───Middleware
-   └───Models
-   ├───docs
-   ├───controllers
-   ├───models
-   └───swagger
-   └───tests
+├───app
+│   ├───Controllers
+│   │   └───Http
+│   ├───Exceptions
+│   ├───Middleware
+│   └───Models
+├───docs
+|   ├───controllers
+|   ├───models
+|   └───swagger
+└───tests
     └───functional
 ```
 
