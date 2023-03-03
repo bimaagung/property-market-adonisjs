@@ -5,8 +5,6 @@
 
 <br>
 
-## 🛠️ Installation Steps
-
 ### 🐳Installation project with docker
 
 clone project
